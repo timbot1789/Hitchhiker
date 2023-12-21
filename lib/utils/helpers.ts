@@ -12,3 +12,13 @@ export function check_and_create_dir(path_to_dir: string) {
 
   return log_dir;
 }
+
+export function get_caller_info(): string {
+  const error: { stack?: string } = {};
+  Error.captureStackTrace(error);
+
+  const caller_frame = error.stack?.split("\n")[9];
+
+  const meta_data = caller_frame?.split("at ").pop() || "";
+  return meta_data;
+}
