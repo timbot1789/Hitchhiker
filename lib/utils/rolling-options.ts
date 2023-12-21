@@ -6,7 +6,7 @@ export enum RollingSizeOptions {
   FiftyKB = 50 * 1024,
   HundredKB = 100 * 1024,
   HalfMB = 512 * 1024,
-  OneMB = 1024*1024,
+  OneMB = 1024 * 1024,
   FiveMB = 5 * 1024 * 1024,
   TenMB = 10 * 1024 * 1024,
   TwentyMB = 20 * 1024 * 1024,
