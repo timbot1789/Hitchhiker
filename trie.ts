@@ -1,7 +1,7 @@
 export class TrieNode {
   #children: {
     [key: string]: TrieNode
-  } = {}
+  } = {};
   #isEndOfWord: boolean = false;
 
   insert(word: string) {
