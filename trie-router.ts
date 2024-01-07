@@ -9,18 +9,27 @@ class RouteNode {
       this.#handler = handler;
       return;
     }
-    const nodeVal = pathSegments.shift();
-    if (nodeVal) {
-      if (!this.#children[nodeVal]){
-        this.#children[nodeVal] = new RouteNode();
-      }
-
-      this.#children[nodeVal].insert(pathSegments, handler);
+    const nodeVal = pathSegments.shift() as string;
+    if (!this.#children[nodeVal]){
+      this.#children[nodeVal] = new RouteNode();
     }
+
+    this.#children[nodeVal].insert(pathSegments, handler);
+  }
+
+  findRoute(pathSegments: string[]): (() => unknown) | null  {
+    if (pathSegments.length < 1) {
+      return this.#handler;
+    }
+
+    const nodeVal = pathSegments.shift() as string;
+    if (this.#children[nodeVal]){
+      return this.#children[nodeVal].findRoute(pathSegments);
+    }
+    return null;
   }
 
   getRoutes(partial: string = ''){
-
     let words: string[] = [];
     if (this.#handler){
       words.push(partial);
@@ -40,17 +49,26 @@ class TrieRouter {
     this.#root = new RouteNode();
   }
 
-  addRoute(path: string, handler: () => unknown) {
+  static processRouteString(path: string): string[]{
     if (path.charAt(0) !== '/') {
-      throw new Error("paths must be absolute");
+      throw new Error("paths must begin with a / ");
     }
     const pathSegments = path.split('/');
-    const cleanedPathSegments = pathSegments.map(
+    return pathSegments.map(
       (segment) => segment.trim()
     ).filter(
         (segment) => segment.length > 0
     );
-    this.#root.insert(cleanedPathSegments, handler);
+  }
+
+  addRoute(path: string, handler: () => unknown) {
+    const processedRoute = TrieRouter.processRouteString(path)
+    this.#root.insert(processedRoute, handler);
+  }
+
+  findRoute(path: string): (() => unknown) | null {
+    const processedRoute = TrieRouter.processRouteString(path)
+    return this.#root.findRoute(processedRoute);
   }
 
   getRoutes(){
