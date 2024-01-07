@@ -66,11 +66,18 @@ class TrieRouter {
       throw new Error("paths must begin with a / ");
     }
     const pathSegments = path.split('/');
-    return pathSegments.map(
+    const cleanedSegments = pathSegments.map(
       (segment) => segment.trim()
     ).filter(
         (segment) => segment.length > 0
     );
+    const normalizedSegments = cleanedSegments.map((segment) => {
+      if (segment.charAt(0) === ':') {
+        return segment;
+      }
+      return segment.toLowerCase();
+    });
+    return normalizedSegments;
   }
 
   addRoute(path: string, handler: () => unknown, method: HTTP_METHOD) {
