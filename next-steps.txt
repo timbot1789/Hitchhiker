@@ -1,0 +1,6 @@
+- Add unit tests
+- refactor router API
+- Implement dynamic routes
+- Implement middleware
+- Figure out nested routes
+- Figure out logger integration
