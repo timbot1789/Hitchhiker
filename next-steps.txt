@@ -1,6 +1,6 @@
-- Add unit tests
+- ~Add unit tests~
 - refactor router API
 - Implement dynamic routes
+- Implement multiple handlers per route with `next()`
 - Implement middleware
 - Figure out nested routes
-- Figure out logger integration
