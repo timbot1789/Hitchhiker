@@ -1,57 +1,77 @@
 import { expect, test } from "bun:test";
 import { Hitchhiker} from "lib/hitchhiker";
 
-test("You can add GET routes", () => {
+const PORT = 8080;
+
+test("You can add GET routes", async () => {
   const app = new Hitchhiker();
-  app.get("/at", () => new Response()); 
-  expect(app.getRoutes()).toBeArray(); 
-  expect(app.getRoutes()[0]).toBe("GET /at"); 
+  app.get("/at", () => new Response("hello")).listen(PORT); 
+  const response = await fetch("localhost:8080/at");
+  const html = await response.text();
+  expect(html).toBe("hello"); 
+  app.stop();
 });
-test("You can add POST routes", () => {
+test("You can add POST routes", async () => {
   const app = new Hitchhiker();
-  app.post("/at", () => new Response()); 
-  expect(app.getRoutes()).toBeArray(); 
-  expect(app.getRoutes()[0]).toBe("POST /at"); 
+  app.post("/at", () => new Response("hello")).listen(PORT); 
+  const response = await fetch("localhost:8080/at");
+  const html = await response.text();
+  expect(html).toBe("hello"); 
+  app.stop();
 });
-test("You can add PUT routes", () => {
+test("You can add PUT routes", async () => {
   const app = new Hitchhiker();
-  app.put("/at", () => new Response()); 
-  expect(app.getRoutes()).toBeArray(); 
-  expect(app.getRoutes()[0]).toBe("PUT /at"); 
+  app.put("/at", () => new Response("hello")).listen(PORT); 
+  const response = await fetch("localhost:8080/at");
+  const html = await response.text();
+  expect(html).toBe("hello"); 
+  app.stop();
 });
-test("You can add DELETE routes", () => {
+test("You can add DELETE routes", async () => {
   const app = new Hitchhiker();
-  app.delete("/at", () => new Response()); 
-  expect(app.getRoutes()).toBeArray(); 
-  expect(app.getRoutes()[0]).toBe("DELETE /at"); 
+  app.delete("/at", () => new Response("hello")).listen(PORT); 
+  const response = await fetch("localhost:8080/at");
+  const html = await response.text();
+  expect(html).toBe("hello"); 
+  app.stop();
 });
-test("You can add PATCH routes", () => {
+test("You can add PATCH routes", async () => {
   const app = new Hitchhiker();
-  app.patch("/at", () => new Response()); 
-  expect(app.getRoutes()).toBeArray(); 
-  expect(app.getRoutes()[0]).toBe("PATCH /at"); 
+  app.get("/at", () => new Response("hello")).listen(PORT); 
+  const response = await fetch("localhost:8080/at");
+  const html = await response.text();
+  expect(html).toBe("hello"); 
+  app.stop();
 });
-test("You can add HEAD routes", () => {
+test("You can add HEAD routes", async () => {
   const app = new Hitchhiker();
-  app.head("/at", () => new Response()); 
-  expect(app.getRoutes()).toBeArray(); 
-  expect(app.getRoutes()[0]).toBe("HEAD /at"); 
+  app.head("/at", () => new Response("hello")).listen(PORT); 
+  const response = await fetch("localhost:8080/at");
+  const html = await response.text();
+  expect(html).toBe("hello"); 
+  app.stop();
 });
-test("You can add OPTIONS routes", () => {
+test("You can add OPTIONS routes", async () => {
   const app = new Hitchhiker();
-  app.options("/at", () => new Response()); 
-  expect(app.getRoutes()).toBeArray(); 
-  expect(app.getRoutes()[0]).toBe("OPTIONS /at"); 
+  app.options("/at", () => new Response("hello")).listen(PORT); 
+  const response = await fetch("localhost:8080/at");
+  const html = await response.text();
+  expect(html).toBe("hello"); 
+  app.stop();
 });
-test("You can add CONNECT routes", () => {
+test("You can add CONNECT routes", async () => {
   const app = new Hitchhiker();
-  app.connect("/at", () => new Response()); 
-  expect(app.getRoutes()).toBeArray(); 
-  expect(app.getRoutes()[0]).toBe("CONNECT /at"); 
+  app.connect("/at", () => new Response("hello")).listen(PORT); 
+  const response = await fetch("localhost:8080/at");
+  const html = await response.text();
+  expect(html).toBe("hello"); 
+  app.stop();
 });
-test("You can add TRACE routes", () => {
+test("You can add TRACE routes", async () => {
   const app = new Hitchhiker();
-  app.trace("/at", () => new Response()); 
-  expect(app.getRoutes()).toBeArray(); 
-  expect(app.getRoutes()[0]).toBe("TRACE /at"); 
+  app.trace("/at", () => new Response("hello")).listen(PORT); 
+  const response = await fetch("localhost:8080/at");
+  const html = await response.text();
+  expect(html).toBe("hello"); 
+  app.stop();
 });

@@ -1,6 +1,7 @@
 import { TrieRouter } from "lib/router/trie-router";
 import { HTTP_METHOD } from "lib/constants/enums";
 import { IContext } from "./interfaces";
+import { Server } from "bun";
 
 function validateHttpMethod(method: string): HTTP_METHOD {
   const res = Object.values(HTTP_METHOD).find((value) => method === HTTP_METHOD[value]);
@@ -12,6 +13,7 @@ function validateHttpMethod(method: string): HTTP_METHOD {
 
 export class Hitchhiker {
   #router: TrieRouter;
+  #server: Server | null = null;
 
   constructor() {
     this.#router = new TrieRouter();
@@ -71,12 +73,20 @@ export class Hitchhiker {
 
   listen(port: number): Hitchhiker{
     const app = this;
-    Bun.serve({
+    this.#server = Bun.serve({
       port: port,
       fetch(req) {
         return app.#handleRequest(req);
       }
     });
+    return this;
+  }
+  stop(): Hitchhiker{
+    if (!this.#server) {
+      return this;
+    }
+
+    this.#server.stop();
     return this;
   }
 
