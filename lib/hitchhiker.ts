@@ -31,7 +31,11 @@ export class Hitchhiker {
       request,
       set: {},
     };
-    return handler(context);
+    try {
+      return handler(context);
+    } catch (e: any) {
+      return new Response(e?.message ?? "", {status: e?.statusCode ?? 500 })
+    }
   }
 
   #addRoute(method: HTTP_METHOD, path: string | URL, handler: (context?: IContext) => Response) {
