@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "lib": ["ESNext"],
+    "paths": {
+      "lib/*": ["./lib/*"]
+    },
     "module": "esnext",
     "target": "esnext",
     "moduleResolution": "bundler",
