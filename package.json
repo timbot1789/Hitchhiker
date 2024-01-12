@@ -3,10 +3,19 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
-    "bun-types": "latest"
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "bun-types": "latest",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1"
   },
   "scripts": {
-    "test": "bun tests/test.ts"
+    "test": "bun tests/test.ts",
+    "lint": "eslint --fix \"lib/**/*.ts\" \"tests/**/*.ts\" && prettier --write \"lib/**/*.ts\" \"tests/**/*.ts\"",
+    "eslint": "eslint --fix \"lib/**/*.ts\" \"tests/**/*.ts\"",
+    "prettier": "prettier --write \"lib/**/*.ts\" \"tests/**/*.ts\"",
+    "eslint:ci": "eslint \"lib/**/*.ts\" \"tests/**/*.ts\"",
+    "prettier:ci": "prettier --check \"lib/**/*.ts\" \"tests/**/*.ts\""
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

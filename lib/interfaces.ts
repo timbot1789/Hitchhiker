@@ -2,7 +2,7 @@ export interface IContext {
   request: Request;
   set: {
     status?: number;
-    headers?: {};
+    headers?: object;
     redirect?: string;
   };
 }

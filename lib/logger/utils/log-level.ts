@@ -11,13 +11,13 @@ export class LogLevel {
       [this.Info]: "INFO",
       [this.Warn]: "WARN",
       [this.Error]: "ERROR",
-      [this.Critical]: "CRITICAL"
-    }
+      [this.Critical]: "CRITICAL",
+    };
 
-    if (levelMap.hasOwnProperty(log_level)) {
+    if (Object.prototype.hasOwnProperty.call(levelMap, "log_level")) {
       return levelMap[log_level];
     }
 
-    throw new Error (`Unsupported log level ${log_level}`)
+    throw new Error(`Unsupported log level ${log_level}`);
   }
 }

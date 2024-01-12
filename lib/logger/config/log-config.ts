@@ -17,11 +17,11 @@ export class LogConfig {
     return this.#level;
   }
 
-  get rolling_config(){
+  get rolling_config() {
     return this.#rolling_config;
   }
 
-  get file_prefix(){
+  get file_prefix() {
     return this.#file_prefix;
   }
 
@@ -30,14 +30,18 @@ export class LogConfig {
   }
 
   with_log_level(log_level: LogLevel) {
-    if (!Object.values(LogLevel).includes(log_level)){
-      throw new Error(`log_level must be an instance of LogLevel. Unsupported param ${JSON.stringify(log_level)}`);
+    if (!Object.values(LogLevel).includes(log_level)) {
+      throw new Error(
+        `log_level must be an instance of LogLevel. Unsupported param ${JSON.stringify(
+          log_level,
+        )}`,
+      );
     }
     this.#level = log_level;
-    return this
+    return this;
   }
 
-  with_file_prefix(file_prefix: string){
+  with_file_prefix(file_prefix: string) {
     this.#file_prefix = file_prefix;
     return this;
   }
@@ -51,12 +55,14 @@ export class LogConfig {
     let log_config = new LogConfig();
 
     Object.keys(json).forEach((key) => {
-      switch (key){
+      switch (key) {
         case "level":
           log_config = log_config.with_log_level(json[key] ?? LogLevel.Debug);
           break;
         case "rolling_config":
-          log_config = log_config.with_rolling_config(json[key] ?? RollingConfig.with_defaults());
+          log_config = log_config.with_rolling_config(
+            json[key] ?? RollingConfig.with_defaults(),
+          );
           break;
         case "file_prefix":
           log_config = log_config.with_file_prefix(json[key] ?? "");
@@ -67,7 +73,7 @@ export class LogConfig {
     return log_config;
   }
 
-  static async from_file(file_path: string){
+  static async from_file(file_path: string) {
     const file = Bun.file(file_path);
     return LogConfig.from_json(JSON.parse(await file.text()));
   }
