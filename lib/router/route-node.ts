@@ -1,10 +1,12 @@
 import { HTTP_METHOD } from "lib/constants/enums";
 import { IContext } from "lib/interfaces";
 
+enum SPECIAL_CHILD {
+  DYNAMIC 
+}
+
 export class RouteNode {
-  #children: {
-    [key: string]: RouteNode;
-  } = {};
+  #children: Map<string | SPECIAL_CHILD, RouteNode> = new Map();
   #handlers: Map<HTTP_METHOD, (context: IContext) => Response> = new Map();
 
   insert(
@@ -17,16 +19,15 @@ export class RouteNode {
       return this;
     }
     const nodeVal = pathSegments[0];
-    if (!this.#children[nodeVal]) {
-      this.#children[nodeVal] = new RouteNode();
+    if (!this.#children.get(nodeVal)) {
+      this.#children.set(nodeVal, new RouteNode());
     }
 
-    this.#children[nodeVal].insert(
+    this.#children.get(nodeVal)?.insert(
       pathSegments.toSpliced(0, 1),
       method,
       handler,
     );
-    return this;
   }
 
   findRoute(
@@ -41,8 +42,9 @@ export class RouteNode {
     }
 
     const nodeVal = pathSegments[0];
-    if (this.#children[nodeVal]) {
-      return this.#children[nodeVal].findRoute(
+    const node = this.#children.get(nodeVal);
+    if (node) {
+      return node.findRoute(
         pathSegments.toSpliced(0, 1),
         method,
       );
