@@ -72,8 +72,7 @@ describe("TrieRouter tests", () => {
     router.addRoute(
       dynamicPath,
       HTTP_METHOD.GET,
-      ({ request }) =>
-        new Response(`Received request for dynamic path`),
+      () => new Response(`Received request for dynamic path`),
     );
     const handler = router.findRoute("/10", HTTP_METHOD.GET);
     const response = await handler(mockContext()).text();

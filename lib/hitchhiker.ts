@@ -83,6 +83,14 @@ export class Hitchhiker {
     return this;
   }
 
+  get port() {
+    return this.#server?.port ?? null;
+  }
+
+  get url() {
+    return this.#server?.url ?? null;
+  }
+
   listen(port: number): Hitchhiker {
     this.#server = Bun.serve({
       port: port,
