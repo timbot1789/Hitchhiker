@@ -43,41 +43,41 @@ export class Hitchhiker {
   #addRoute(
     method: HTTP_METHOD,
     path: string | URL,
-    handler: (context?: IContext) => Response,
+    handler: (context: IContext) => Response,
   ) {
-    this.#router.addRoute(path, handler, method);
+    this.#router.addRoute(path, method, handler);
     return this;
   }
 
-  get(path: string | URL, handler: (context?: IContext) => Response) {
+  get(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.GET, path, handler);
   }
-  post(path: string | URL, handler: (context?: IContext) => Response) {
+  post(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.POST, path, handler);
   }
-  put(path: string | URL, handler: (context?: IContext) => Response) {
+  put(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.PUT, path, handler);
   }
-  delete(path: string | URL, handler: (context?: IContext) => Response) {
+  delete(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.DELETE, path, handler);
   }
-  patch(path: string | URL, handler: (context?: IContext) => Response) {
+  patch(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.PATCH, path, handler);
   }
-  head(path: string | URL, handler: (context?: IContext) => Response) {
+  head(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.HEAD, path, handler);
   }
-  options(path: string | URL, handler: (context?: IContext) => Response) {
+  options(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.OPTIONS, path, handler);
   }
-  connect(path: string | URL, handler: (context?: IContext) => Response) {
+  connect(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.CONNECT, path, handler);
   }
-  trace(path: string | URL, handler: (context?: IContext) => Response) {
+  trace(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.TRACE, path, handler);
   }
   use() // path: string | URL,
-  // handler: (req: IContext, res: Response, next: () => void) => void,
+  // handler: (context: IContext) => Response,
   : Hitchhiker {
     // TODO
     return this;
@@ -99,9 +99,5 @@ export class Hitchhiker {
 
     this.#server.stop();
     return this;
-  }
-
-  getRoutes() {
-    return this.#router.getRoutes();
   }
 }

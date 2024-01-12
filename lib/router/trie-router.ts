@@ -30,7 +30,7 @@ export class TrieRouter {
   addRoute(
     path: string | URL,
     method: HTTP_METHOD,
-    handler: (context?: IContext) => Response,
+    handler: (context: IContext) => Response,
   ) {
     const processedRoute = TrieRouter.processRouteString(path);
     this.#root.insert(processedRoute, method, handler);
@@ -40,7 +40,7 @@ export class TrieRouter {
   findRoute(
     path: string | URL,
     method: HTTP_METHOD,
-  ): (context?: IContext) => Response {
+  ): (context: IContext) => Response {
     const guardedPath = path instanceof URL ? path.pathname : path;
     const processedRoute = TrieRouter.processRouteString(guardedPath);
     return this.#root.findRoute(processedRoute, method);

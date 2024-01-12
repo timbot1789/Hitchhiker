@@ -5,12 +5,12 @@ export class RouteNode {
   #children: {
     [key: string]: RouteNode;
   } = {};
-  #handlers: Map<HTTP_METHOD, (context?: IContext) => Response> = new Map();
+  #handlers: Map<HTTP_METHOD, (context: IContext) => Response> = new Map();
 
   insert(
     pathSegments: string[],
     method: HTTP_METHOD,
-    handler: (context?: IContext) => Response,
+    handler: (context: IContext) => Response,
   ) {
     if (pathSegments.length < 1) {
       this.#handlers.set(method, handler);
@@ -32,8 +32,7 @@ export class RouteNode {
   findRoute(
     pathSegments: string[],
     method: HTTP_METHOD,
-  ): (context?: IContext) => Response {
-    console.log(`finding path ${pathSegments}`);
+  ): (context: IContext) => Response {
     if (pathSegments.length < 1) {
       return (
         this.#handlers.get(method) ??
@@ -43,7 +42,6 @@ export class RouteNode {
 
     const nodeVal = pathSegments[0];
     if (this.#children[nodeVal]) {
-      console.log(`getting child ${nodeVal}`);
       return this.#children[nodeVal].findRoute(
         pathSegments.toSpliced(0, 1),
         method,

@@ -3,7 +3,7 @@ import { Hitchhiker } from "lib/hitchhiker";
 
 const PORT = 8080;
 
-describe("route builder tests", () => {
+describe("basic tests", () => {
   let app: Hitchhiker = new Hitchhiker();
   beforeEach(() => {
     app = new Hitchhiker();
@@ -65,9 +65,25 @@ describe("route builder tests", () => {
     const html = await response.text();
     expect(html).toBe("hello");
   });
+});
+describe("advanced tests", () => {
+  let app: Hitchhiker = new Hitchhiker();
+  beforeEach(() => {
+    app = new Hitchhiker();
+  });
+  afterEach(() => {
+    app.stop();
+  });
   test("Unknown paths return 404", async () => {
     app.get("/at", () => new Response()).listen(PORT);
     const response = await fetch(`localhost:${PORT}/fakeRoute`);
     expect(response.status).toBe(404);
+  });
+  test("allows dynamic routes", async () => {
+    app.get("/:id", () => new Response("dynamic routes")).listen(PORT);
+    const response = await fetch(`localhost:${PORT}/430`);
+    expect(response.status).toBe(200);
+    const html = await response.text();
+    expect(html).toBe("dynamic routes");
   });
 });
