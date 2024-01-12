@@ -1,6 +1,7 @@
 - ~Add unit tests~
 - ~refactor router API~
 - ~Implement dynamic routes~
+- Build out package
 - Implement context API
 - Implement middleware
 - Figure out nested apps 
