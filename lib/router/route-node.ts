@@ -2,7 +2,7 @@ import { HTTP_METHOD } from "lib/constants/enums";
 import { IContext } from "lib/interfaces";
 
 enum SPECIAL_CHILD {
-  DYNAMIC 
+  DYNAMIC = "|dynamic" 
 }
 
 export class RouteNode {
@@ -18,7 +18,8 @@ export class RouteNode {
       this.#handlers.set(method, handler);
       return this;
     }
-    const nodeVal = pathSegments[0];
+    let nodeVal: string | SPECIAL_CHILD = pathSegments[0];
+    nodeVal = nodeVal[0] === ":" ? SPECIAL_CHILD.DYNAMIC : nodeVal;
     if (!this.#children.get(nodeVal)) {
       this.#children.set(nodeVal, new RouteNode());
     }
@@ -47,6 +48,13 @@ export class RouteNode {
       return node.findRoute(
         pathSegments.toSpliced(0, 1),
         method,
+      );
+    }
+    const dynamicRoute = this.#children.get(SPECIAL_CHILD.DYNAMIC);
+    if (dynamicRoute) {
+      return dynamicRoute.findRoute(
+        pathSegments.toSpliced(0,1),
+        method
       );
     }
     return () => new Response("Not Found", { status: 404 });

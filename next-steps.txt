@@ -1,6 +1,5 @@
 - ~Add unit tests~
-- refactor router API
-- Implement dynamic routes
-- Implement multiple handlers per route with `next()`
+- ~refactor router API~
+- ~Implement dynamic routes~
 - Implement middleware
-- Figure out nested routes
+- Figure out nested apps 
