@@ -5,14 +5,15 @@
   "description": "A simple web framework built on bun designed for tinkering",
   "version": "0.0.1",
   "devDependencies": {
+    "@types/bun": "^1.0.1",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
-    "bun-types": "latest",
     "eslint": "^8.56.0",
     "prettier": "^3.1.1",
+    "tsup": "^8.0.1"
   },
   "scripts": {
-    "build": "tsc", 
+    "compile": "tsc",
     "test": "bun tests/test.ts",
     "lint": "eslint --fix \"lib/**/*.ts\" \"tests/**/*.ts\" && prettier --write \"lib/**/*.ts\" \"tests/**/*.ts\"",
     "eslint": "eslint --fix \"lib/**/*.ts\" \"tests/**/*.ts\"",
@@ -21,7 +22,7 @@
     "prettier:ci": "prettier --check \"lib/**/*.ts\" \"tests/**/*.ts\""
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.3.0"
   },
   "author": "Tim Standen",
   "license": "MIT"

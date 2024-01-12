@@ -18,9 +18,11 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "types": [
-      "bun-types" // add Bun global
-    ]
+    "declaration": true,
+    "outDir": "dist",
   },
+  "files": [
+    "lib/hitchhiker.ts"
+  ],
   "include": ["./lib/**/*"]
 }
