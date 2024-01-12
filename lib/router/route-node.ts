@@ -21,7 +21,11 @@ export class RouteNode {
       this.#children[nodeVal] = new RouteNode();
     }
 
-    this.#children[nodeVal].insert(pathSegments.toSpliced(0,1), method, handler);
+    this.#children[nodeVal].insert(
+      pathSegments.toSpliced(0, 1),
+      method,
+      handler,
+    );
     return this;
   }
 
@@ -39,8 +43,11 @@ export class RouteNode {
 
     const nodeVal = pathSegments[0];
     if (this.#children[nodeVal]) {
-      console.log(`getting child ${nodeVal}`)
-      return this.#children[nodeVal].findRoute(pathSegments.toSpliced(0,1), method);
+      console.log(`getting child ${nodeVal}`);
+      return this.#children[nodeVal].findRoute(
+        pathSegments.toSpliced(0, 1),
+        method,
+      );
     }
     return () => new Response("Not Found", { status: 404 });
   }

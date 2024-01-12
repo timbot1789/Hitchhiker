@@ -29,17 +29,18 @@ export class TrieRouter {
 
   addRoute(
     path: string | URL,
-    handler: (context?: IContext) => Response,
     method: HTTP_METHOD,
+    handler: (context?: IContext) => Response,
   ) {
     const processedRoute = TrieRouter.processRouteString(path);
     this.#root.insert(processedRoute, method, handler);
+    return this;
   }
 
   findRoute(
     path: string | URL,
     method: HTTP_METHOD,
-  ): ((context: IContext) => Response) | null {
+  ): (context?: IContext) => Response {
     const guardedPath = path instanceof URL ? path.pathname : path;
     const processedRoute = TrieRouter.processRouteString(guardedPath);
     return this.#root.findRoute(processedRoute, method);
