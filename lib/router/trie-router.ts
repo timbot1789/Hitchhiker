@@ -1,61 +1,6 @@
 import { HTTP_METHOD } from "lib/constants/enums";
 import { IContext } from "lib/interfaces";
-
-class RouteNode {
-  #children: {
-    [key: string]: RouteNode;
-  } = {};
-  #handlers: Map<HTTP_METHOD, (context: IContext) => Response> = new Map();
-
-  insert(
-    pathSegments: string[],
-    handler: (context: IContext) => Response,
-    method: HTTP_METHOD,
-  ) {
-    if (pathSegments.length < 1) {
-      this.#handlers.set(method, handler);
-      return;
-    }
-    const nodeVal = pathSegments.shift() as string;
-    if (!this.#children[nodeVal]) {
-      this.#children[nodeVal] = new RouteNode();
-    }
-
-    this.#children[nodeVal].insert(pathSegments, handler, method);
-  }
-
-  findRoute(
-    pathSegments: string[],
-    method: HTTP_METHOD,
-  ): (context: IContext) => Response {
-    if (pathSegments.length < 1) {
-      return (
-        this.#handlers.get(method) ??
-        (() => new Response("Not Found", { status: 404 }))
-      );
-    }
-
-    const nodeVal = pathSegments.shift() as string;
-    if (this.#children[nodeVal]) {
-      return this.#children[nodeVal].findRoute(pathSegments, method);
-    }
-    return () => new Response("Not Found", { status: 404 });
-  }
-
-  getRoutes(partial: string = "") {
-    let words: string[] = [];
-    for (const method of this.#handlers.keys()) {
-      words.push(`${method} ${partial}`);
-    }
-    for (const val in this.#children) {
-      const newWords: string[] = this.#children[val].getRoutes(
-        partial.concat(`/${val}`),
-      );
-      if (words) words = words.concat(newWords);
-    }
-    return words;
-  }
-}
+import { RouteNode } from "./route-node";
 
 export class TrieRouter {
   #root: RouteNode;
@@ -84,11 +29,11 @@ export class TrieRouter {
 
   addRoute(
     path: string | URL,
-    handler: (context: IContext) => Response,
+    handler: (context?: IContext) => Response,
     method: HTTP_METHOD,
   ) {
     const processedRoute = TrieRouter.processRouteString(path);
-    this.#root.insert(processedRoute, handler, method);
+    this.#root.insert(processedRoute, method, handler);
   }
 
   findRoute(
@@ -98,9 +43,5 @@ export class TrieRouter {
     const guardedPath = path instanceof URL ? path.pathname : path;
     const processedRoute = TrieRouter.processRouteString(guardedPath);
     return this.#root.findRoute(processedRoute, method);
-  }
-
-  getRoutes() {
-    return this.#root.getRoutes();
   }
 }
