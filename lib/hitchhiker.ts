@@ -76,10 +76,9 @@ export class Hitchhiker {
   trace(path: string | URL, handler: (context: IContext) => Response) {
     return this.#addRoute(HTTP_METHOD.TRACE, path, handler);
   }
-  use() // path: string | URL,
-  // handler: (context: IContext) => Response,
+  use(path: string | URL, handler: (context: IContext, next: () => void) => void)
   : Hitchhiker {
-    // TODO
+    this.#router.addMiddleware(path, handler);
     return this;
   }
 

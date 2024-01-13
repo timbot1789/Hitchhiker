@@ -45,4 +45,10 @@ export class TrieRouter {
     const processedRoute = TrieRouter.processRouteString(guardedPath);
     return this.#root.findRoute(processedRoute, method);
   }
+
+  addMiddleware(path: string | URL, handler: (context: IContext, next: () => void) => void){
+    const processedRoute = TrieRouter.processRouteString(path);
+    this.#root.addMiddleware(processedRoute, handler);
+    return this;
+  }
 }
