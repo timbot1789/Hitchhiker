@@ -42,13 +42,9 @@ export class RouteNode {
     }
 
     const nodeVal = pathSegments[0];
-    const node = this.#children.get(nodeVal);
+    const node = this.#children.get(nodeVal) ?? this.#children.get(SPECIAL_CHILD.DYNAMIC);
     if (node) {
       return node.findRoute(pathSegments.toSpliced(0, 1), method);
-    }
-    const dynamicRoute = this.#children.get(SPECIAL_CHILD.DYNAMIC);
-    if (dynamicRoute) {
-      return dynamicRoute.findRoute(pathSegments.toSpliced(0, 1), method);
     }
     return () => new Response("Not Found", { status: 404 });
   }
