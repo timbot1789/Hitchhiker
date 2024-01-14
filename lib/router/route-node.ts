@@ -1,5 +1,6 @@
 import { HTTP_METHOD } from "lib/constants/enums";
 import { IContext } from "lib/interfaces";
+import { compose } from "./compose";
 
 enum SPECIAL_CHILD {
   DYNAMIC,
@@ -7,13 +8,13 @@ enum SPECIAL_CHILD {
 
 export class RouteNode {
   #children: Map<string | SPECIAL_CHILD, RouteNode> = new Map();
-  #handlers: Map<HTTP_METHOD, (context: IContext) => Response> = new Map();
-  #middleware: ((context: IContext, next: () => void) => void)[] = [];
+  #handlers: Map<HTTP_METHOD, (context: IContext) => Promise<Response>> = new Map();
+  #middleware: ((context: IContext, next: () => void) => Promise<unknown>)[] = [];
 
   insert(
     pathSegments: string[],
     method: HTTP_METHOD,
-    handler: (context: IContext) => Response,
+    handler: (context: IContext) => Promise<Response>,
   ) {
     if (pathSegments.length < 1) {
       this.#handlers.set(method, handler);
@@ -33,23 +34,25 @@ export class RouteNode {
   findRoute(
     pathSegments: string[],
     method: HTTP_METHOD,
-  ): (context: IContext) => Response {
+  ): (context: IContext) => Promise<Response> {
+    let func;
     if (pathSegments.length < 1) {
-      return (
+      func =
         this.#handlers.get(method) ??
-        (() => new Response("Not Found", { status: 404 }))
-      );
-    }
-
+        (async () => new Response("Not Found", { status: 404 }));
+    } else {
+    
     const nodeVal = pathSegments[0];
     const node = this.#children.get(nodeVal) ?? this.#children.get(SPECIAL_CHILD.DYNAMIC);
     if (node) {
-      return node.findRoute(pathSegments.toSpliced(0, 1), method);
+      func = node.findRoute(pathSegments.toSpliced(0, 1), method);
     }
-    return () => new Response("Not Found", { status: 404 });
+    func = async () => new Response("Not Found", { status: 404 });
+    }
+    return compose(this.#middleware.toSpliced(this.#middleware.length, 0, func));
   }
 
-  addMiddleware(pathSegments: string[], handler: (context: IContext, next: () => void) => void){
+  addMiddleware(pathSegments: string[], handler: (context: IContext, next: () => void) => Promise<unknown>){
     if (pathSegments.length < 1) {
       this.#middleware.push(handler);
       return this;

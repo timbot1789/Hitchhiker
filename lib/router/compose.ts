@@ -28,28 +28,3 @@ export function compose (middleware: ((context: IContext, next: () => Promise<Re
   }
 }
 
-function responseFunction() {
-  return "this is a response function";
-}
-
-function responseFunctionWithContext(ctx: IContext) {
-  return `This is the response function that received ${ctx.request.url}`;
-}
-async function firstMiddleware(ctx: IContext, next: () => Promise<unknown>){
-  console.log("first middleware");
-  ctx.request = new Request("http://modified.com");
-  await next();
-  console.log("First middleware exit");
-}
-async function secondMiddleware(_ctx: IContext, next: () => Promise<unknown>){
-  console.log("second middleware");
-  await next();
-  console.log("second middleware exit");
-}
-const middleware = [firstMiddleware, secondMiddleware, responseFunctionWithContext];
-const composed = compose(middleware);
-console.log(composed);
-const context ={request: new Request("http://example.com"), set: {}}
-const result = await composed(context);
-console.log("The return value is", result);
-console.log(context);

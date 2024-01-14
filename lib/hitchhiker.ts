@@ -1,5 +1,5 @@
-import { TrieRouter } from "lib/router/trie-router";
-import { HTTP_METHOD } from "lib/constants/enums";
+import { TrieRouter } from "./router/trie-router";
+import { HTTP_METHOD } from "./constants/enums";
 import { IContext } from "./interfaces";
 import { Server } from "bun";
 
@@ -21,7 +21,7 @@ export class Hitchhiker {
     this.#router = new TrieRouter();
   }
 
-  #handleRequest(request: Request): Response {
+  async #handleRequest(request: Request): Promise<Response> {
     const method = request.method as HTTP_METHOD;
     const validMethod = validateHttpMethod(method);
     const url = new URL(request.url);
@@ -34,7 +34,7 @@ export class Hitchhiker {
       set: {},
     };
     try {
-      return handler(context);
+      return await handler(context);
     } catch (e: unknown) {
       return new Response("Internal Server Error", { status: 500 });
     }
@@ -43,40 +43,40 @@ export class Hitchhiker {
   #addRoute(
     method: HTTP_METHOD,
     path: string | URL,
-    handler: (context: IContext) => Response,
+    handler: (context: IContext) => Promise<Response>,
   ) {
     this.#router.addRoute(path, method, handler);
     return this;
   }
 
-  get(path: string | URL, handler: (context: IContext) => Response) {
+  get(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.GET, path, handler);
   }
-  post(path: string | URL, handler: (context: IContext) => Response) {
+  post(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.POST, path, handler);
   }
-  put(path: string | URL, handler: (context: IContext) => Response) {
+  put(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.PUT, path, handler);
   }
-  delete(path: string | URL, handler: (context: IContext) => Response) {
+  delete(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.DELETE, path, handler);
   }
-  patch(path: string | URL, handler: (context: IContext) => Response) {
+  patch(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.PATCH, path, handler);
   }
-  head(path: string | URL, handler: (context: IContext) => Response) {
+  head(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.HEAD, path, handler);
   }
-  options(path: string | URL, handler: (context: IContext) => Response) {
+  options(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.OPTIONS, path, handler);
   }
-  connect(path: string | URL, handler: (context: IContext) => Response) {
+  connect(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.CONNECT, path, handler);
   }
-  trace(path: string | URL, handler: (context: IContext) => Response) {
+  trace(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.TRACE, path, handler);
   }
-  use(path: string | URL, handler: (context: IContext, next: () => void) => void)
+  use(path: string | URL, handler: (context: IContext, next: () => void) => Promise<unknown>)
   : Hitchhiker {
     this.#router.addMiddleware(path, handler);
     return this;

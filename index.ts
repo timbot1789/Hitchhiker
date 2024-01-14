@@ -1,23 +1,23 @@
-import { Hitchhiker } from "lib/hitchhiker";
-import { IContext } from "lib/interfaces";
+import { Hitchhiker } from "./lib/hitchhiker";
+import { IContext } from "./lib/interfaces";
 
 const app = new Hitchhiker();
 
 const PORT = 8080
 
-function getBase() {
+async function getBase() {
   return new Response("Hello");
 }
 
-function getHi() {
+async function getHi() {
   return new Response("Hi");
 }
 
-function getId({request}: IContext) {
+async function getId({request}: IContext) {
   return new Response(`Route has ID of ${request.url.split("/").pop()}`);
 }
 
-function getReadId({request}: IContext) {
+async function getReadId({request}: IContext) {
   const splitArr = request.url.split("/");
   splitArr.pop();
   const id = splitArr.pop();
