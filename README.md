@@ -8,5 +8,9 @@ Thank you to @ishtms and his [Learn Node JS the Hard Way](https://github.com/ish
 
 ## Installation Instructions
 1. Install [Bun](https://bun.sh/)
+2. Fork the project :)
+
+## Development Instructions
+1. Install [Bun](https://bun.sh/)
 2. Clone the project `git clone https://github.com/timbot1789/Hitchhiker.git` 
 3. Install dev dependencies with `bun i`
