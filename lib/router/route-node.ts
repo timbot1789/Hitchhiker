@@ -1,5 +1,5 @@
 import { HTTP_METHOD } from "lib/constants/enums";
-import { IContext } from "lib/interfaces";
+import { HandlerSignature, IContext } from "lib/interfaces";
 import { compose } from "./compose";
 
 enum SPECIAL_CHILD {
@@ -9,7 +9,7 @@ enum SPECIAL_CHILD {
 export class RouteNode {
   #children: Map<string | SPECIAL_CHILD, RouteNode> = new Map();
   #handlers: Map<HTTP_METHOD, (context: IContext) => Promise<Response>> = new Map();
-  #middleware: ((context: IContext, next: () => void) => Promise<unknown>)[] = [];
+  #middleware: ((context: IContext, next: () => Promise<Response>) => Promise<Response>)[] = [];
 
   insert(
     pathSegments: string[],
@@ -35,11 +35,10 @@ export class RouteNode {
     pathSegments: string[],
     method: HTTP_METHOD,
   ): (context: IContext) => Promise<Response> {
-    let func;
-    if (pathSegments.length < 1) {
-      func =
-        this.#handlers.get(method) ??
-        (async () => new Response("Not Found", { status: 404 }));
+    const defaultFunction = async () => new Response("Not Found", { status: 404 })
+    let func: HandlerSignature = defaultFunction;
+    if (pathSegments.length < 1 && this.#handlers.get(method) ) {
+      func = this.#handlers.get(method) as HandlerSignature 
     } else {
     
     const nodeVal = pathSegments[0];
@@ -47,12 +46,11 @@ export class RouteNode {
     if (node) {
       func = node.findRoute(pathSegments.toSpliced(0, 1), method);
     }
-    func = async () => new Response("Not Found", { status: 404 });
     }
-    return compose(this.#middleware.toSpliced(this.#middleware.length, 0, func));
+    return compose(this.#middleware.toSpliced(this.#middleware.length, 0, func), defaultFunction);
   }
 
-  addMiddleware(pathSegments: string[], handler: (context: IContext, next: () => void) => Promise<unknown>){
+  addMiddleware(pathSegments: string[], handler: HandlerSignature ) {
     if (pathSegments.length < 1) {
       this.#middleware.push(handler);
       return this;

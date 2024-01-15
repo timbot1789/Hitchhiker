@@ -1,6 +1,6 @@
 import { TrieRouter } from "./router/trie-router";
 import { HTTP_METHOD } from "./constants/enums";
-import { IContext } from "./interfaces";
+import { HandlerSignature, IContext } from "./interfaces";
 import { Server } from "bun";
 
 function validateHttpMethod(method: string): HTTP_METHOD {
@@ -76,7 +76,7 @@ export class Hitchhiker {
   trace(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.TRACE, path, handler);
   }
-  use(path: string | URL, handler: (context: IContext, next: () => void) => Promise<unknown>)
+  use(path: string | URL, handler: HandlerSignature)
   : Hitchhiker {
     this.#router.addMiddleware(path, handler);
     return this;

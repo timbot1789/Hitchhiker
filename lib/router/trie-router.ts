@@ -1,5 +1,5 @@
 import { HTTP_METHOD } from "lib/constants/enums";
-import { IContext } from "lib/interfaces";
+import { IContext, HandlerSignature } from "lib/interfaces";
 import { RouteNode } from "./route-node";
 
 export class TrieRouter {
@@ -46,7 +46,7 @@ export class TrieRouter {
     return this.#root.findRoute(processedRoute, method);
   }
 
-  addMiddleware(path: string | URL, handler: (context: IContext, next: () => void) => Promise<unknown>){
+  addMiddleware(path: string | URL, handler: HandlerSignature){
     const processedRoute = TrieRouter.processRouteString(path);
     this.#root.addMiddleware(processedRoute, handler);
     return this;
