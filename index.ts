@@ -23,6 +23,11 @@ async function getReadId({request}: IContext) {
   const id = splitArr.pop();
   return new Response(`Reading record with ID of ${id}`);
 }
+async function responseMiddleware(_ctx: IContext, next: () => Promise<Response>){
+  const response = await next();
+  const text = await response.text();
+  return new Response(`${text}\n This response was modified by middleware`)
+}
 
-app.get("/", getBase).get("/hi", getHi).get("/:id", getId).get("/:id/article", getReadId).listen(PORT);
+app.use("/hi", responseMiddleware).get("/hi/:id",getReadId).get("/hi", getHi).get("/", getBase).get("/:id", getId).get("/:id/article", getReadId).listen(PORT);
 console.log(`App is running at URL ${app.url}`)

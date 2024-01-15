@@ -1,6 +1,7 @@
 - ~Add unit tests~
 - ~refactor router API~
 - ~Implement dynamic routes~
-- Implement middleware
+- ~Implement middleware~
+- ~Build out middleware test with logger~
 - Figure out nested apps 
 - Build out packaging system

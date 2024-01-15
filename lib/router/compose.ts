@@ -1,8 +1,11 @@
-import { IContext, HandlerSignature } from "lib/interfaces"
+import { IContext, HandlerSignature } from "lib/interfaces";
 
-
-export function compose (middleware: HandlerSignature[], defaultHandler: () => Promise<Response>): (context: IContext) => Promise<Response>{
-
+// Adapted from Koa Compose, published under the MIT license
+// available here: https://github.com/koajs/compose/blob/master/index.js
+export function compose(
+  middleware: HandlerSignature[],
+  defaultHandler: () => Promise<Response>,
+): (context: IContext) => Promise<Response> {
   return function (context: IContext) {
     // last called middleware #
     let index = -1;
@@ -10,19 +13,18 @@ export function compose (middleware: HandlerSignature[], defaultHandler: () => P
 
     async function dispatch(i: number): Promise<Response> {
       if (i <= index) {
-        return Promise.reject(new Error('next() called multiple times'))
+        return Promise.reject(new Error("next() called multiple times"));
       }
       index = i;
       const fn: HandlerSignature = middleware[i];
-      if (i === (middleware.length - 1)) {
+      if (i === middleware.length - 1) {
         return await fn(context, defaultHandler);
       }
       try {
         return await fn(context, dispatch.bind(null, i + 1));
       } catch (err) {
-        return Promise.reject(err)
+        return Promise.reject(err);
       }
     }
-  }
+  };
 }
-

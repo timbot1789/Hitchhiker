@@ -58,7 +58,10 @@ export class Hitchhiker {
   put(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.PUT, path, handler);
   }
-  delete(path: string | URL, handler: (context: IContext) => Promise<Response>) {
+  delete(
+    path: string | URL,
+    handler: (context: IContext) => Promise<Response>,
+  ) {
     return this.#addRoute(HTTP_METHOD.DELETE, path, handler);
   }
   patch(path: string | URL, handler: (context: IContext) => Promise<Response>) {
@@ -67,17 +70,22 @@ export class Hitchhiker {
   head(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.HEAD, path, handler);
   }
-  options(path: string | URL, handler: (context: IContext) => Promise<Response>) {
+  options(
+    path: string | URL,
+    handler: (context: IContext) => Promise<Response>,
+  ) {
     return this.#addRoute(HTTP_METHOD.OPTIONS, path, handler);
   }
-  connect(path: string | URL, handler: (context: IContext) => Promise<Response>) {
+  connect(
+    path: string | URL,
+    handler: (context: IContext) => Promise<Response>,
+  ) {
     return this.#addRoute(HTTP_METHOD.CONNECT, path, handler);
   }
   trace(path: string | URL, handler: (context: IContext) => Promise<Response>) {
     return this.#addRoute(HTTP_METHOD.TRACE, path, handler);
   }
-  use(path: string | URL, handler: HandlerSignature)
-  : Hitchhiker {
+  use(path: string | URL, handler: HandlerSignature): Hitchhiker {
     this.#router.addMiddleware(path, handler);
     return this;
   }

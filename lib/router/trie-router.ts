@@ -46,7 +46,7 @@ export class TrieRouter {
     return this.#root.findRoute(processedRoute, method);
   }
 
-  addMiddleware(path: string | URL, handler: HandlerSignature){
+  addMiddleware(path: string | URL, handler: HandlerSignature) {
     const processedRoute = TrieRouter.processRouteString(path);
     this.#root.addMiddleware(processedRoute, handler);
     return this;
